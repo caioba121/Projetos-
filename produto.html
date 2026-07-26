@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Detalhes da Peça</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        body{
+
+            background:#f4f4f4;
+
+            font-family:'Poppins',sans-serif;
+
+        }
+
+        .produto{
+
+            width:90%;
+
+            max-width:1200px;
+
+            margin:40px auto;
+
+            background:#fff;
+
+            border-radius:15px;
+
+            padding:30px;
+
+            display:grid;
+
+            grid-template-columns:1fr 1fr;
+
+            gap:40px;
+
+            box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+        }
+
+        .imagem img{
+
+            width:100%;
+
+            border-radius:12px;
+
+        }
+
+        .info h1{
+
+            font-size:36px;
+
+            margin-bottom:15px;
+
+        }
+
+        .codigo{
+
+            color:#666;
+
+            margin-bottom:25px;
+
+        }
+
+        .preco{
+
+            color:#d90000;
+
+            font-size:38px;
+
+            font-weight:bold;
+
+            margin:20px 0;
+
+        }
+
+        .descricao{
+
+            line-height:30px;
+
+            margin:20px 0;
+
+        }
+
+        .dados{
+
+            margin-top:25px;
+
+        }
+
+        .dados p{
+
+            margin:10px 0;
+
+        }
+
+        .botoes{
+
+            display:flex;
+
+            gap:15px;
+
+            flex-wrap:wrap;
+
+            margin-top:30px;
+
+        }
+
+        .comprar{
+
+            background:#d90000;
+
+            color:white;
+
+            border:none;
+
+            padding:16px 35px;
+
+            border-radius:8px;
+
+            cursor:pointer;
+
+            font-size:17px;
+
+        }
+
+        .voltar{
+
+            background:#333;
+
+            color:white;
+
+            border:none;
+
+            padding:16px 35px;
+
+            border-radius:8px;
+
+            cursor:pointer;
+
+            font-size:17px;
+
+        }
+
+        .comprar:hover{
+
+            background:#b30000;
+
+        }
+
+        .voltar:hover{
+
+            background:#111;
+
+        }
+
+        @media(max-width:900px){
+
+            .produto{
+
+                grid-template-columns:1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+AUTO<span>PEÇAS</span>
+
+</div>
+
+<nav>
+
+<a href="index.html">Início</a>
+
+<a href="#">Categorias</a>
+
+<a href="#">Contato</a>
+
+</nav>
+
+</header>
+
+<section class="produto">
+
+<div class="imagem">
+
+<img id="imagem"
+
+src="https://picsum.photos/700/500"
+
+alt="Peça">
+
+</div>
+
+<div class="info">
+
+<h1 id="nome">
+
+Alternador Bosch 120A
+
+</h1>
+
+<p class="codigo">
+
+Código:
+
+<strong id="codigo">
+
+GM001
+
+</strong>
+
+</p>
+
+<div class="preco"
+
+id="preco">
+
+R$ 1.250,00
+
+</div>
+
+<div class="descricao"
+
+id="descricao">
+
+Alternador original de alta qualidade.
+
+Produto novo com garantia de fábrica.
+
+Ideal para reposição mantendo as especificações originais do veículo.
+
+</div>
+
+<div class="dados">
+
+<p>
+
+<strong>Marca:</strong>
+
+<span id="marca">Chevrolet</span>
+
+</p>
+
+<p>
+
+<strong>Modelo:</strong>
+
+<span id="modelo">Onix</span>
+
+</p>
+
+<p>
+
+<strong>Ano:</strong>
+
+<span id="ano">2022</span>
+
+</p>
+
+<p>
+
+<strong>Categoria:</strong>
+
+<span id="categoria">Elétrica</span>
+
+</p>
+
+</div>
+
+<div class="botoes">
+
+<button class="comprar">
+
+Solicitar Orçamento
+
+</button>
+
+<button class="voltar"
+
+onclick="history.back()">
+
+Voltar
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+<script src="produto.js"></script>
+
+</body>
+
+</html>
