@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AutoPeças Pro - Peças e Acessórios Automotivos</title>
+  <title>AutoPeças Pro - Soluções Automotivas</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,20 +11,48 @@
   <!-- Cabeçalho -->
   <header class="header">
     <div class="logo">AutoPeças <span>Pro</span></div>
+    
     <div class="search-bar">
-      <input type="text" id="global-search" placeholder="Busque por nome da peça ou código OEM...">
-      <button id="btn-global-search">Buscar</button>
+      <input type="text" id="global-search" placeholder="Buscar por peça, código OEM ou aplicação...">
+      <button id="btn-global-search">🔍</button>
     </div>
-    <div class="cart-status">
-      🛒 Carrinho (<span id="cart-count">0</span>)
-    </div>
+
+    <button id="btn-cart-toggle" class="cart-button">
+      🛒 Carrinho
+      <span id="cart-count" class="cart-badge">0</span>
+    </button>
   </header>
 
-  <!-- Seção Principal com Filtro de Veículo -->
+  <!-- Modal / Gaveta Lateral do Carrinho -->
+  <div id="cart-drawer" class="cart-drawer">
+    <div class="cart-drawer-header">
+      <h2>Seu Carrinho</h2>
+      <button id="btn-close-cart" class="close-btn">&times;</button>
+    </div>
+    
+    <div id="cart-items" class="cart-items">
+      <!-- Itens do carrinho são renderizados aqui via JS -->
+    </div>
+
+    <div class="cart-drawer-footer">
+      <div class="cart-total">
+        <span>Total:</span>
+        <strong id="cart-total-value">R$ 0,00</strong>
+      </div>
+      <button id="btn-checkout" class="btn-checkout">Finalizar Compra</button>
+    </div>
+  </div>
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <!-- Conteúdo Principal -->
   <main class="container">
+    
+    <!-- Filtro Veicular em Destaque -->
     <section class="vehicle-selector">
-      <h2>🚗 Encontre a peça exata para o seu carro</h2>
-      <p>Selecione seu veículo para evitar incompatibilidades:</p>
+      <div class="selector-header">
+        <h2>🚗 Busque Peças Compatíveis com seu Veículo</h2>
+        <p>Garantia de encaixe perfeito: selecione os dados do carro para filtrar o catálogo</p>
+      </div>
 
       <div class="filter-group">
         <select id="select-marca">
@@ -39,7 +67,7 @@
           <option value="">3. Selecione o Ano</option>
         </select>
 
-        <button id="btn-filtrar" disabled>Filtrar Peças</button>
+        <button id="btn-filtrar" disabled>Filtrar Catalogo</button>
         <button id="btn-limpar" class="btn-secondary" style="display: none;">Limpar Filtro</button>
       </div>
       
@@ -48,9 +76,13 @@
 
     <!-- Catálogo de Produtos -->
     <section class="catalog">
-      <h2 id="catalog-title">Todas as Peças</h2>
+      <div class="catalog-header">
+        <h2 id="catalog-title">Todas as Peças</h2>
+        <span id="catalog-count" class="catalog-count">Mostrando todas as peças</span>
+      </div>
+
       <div id="product-grid" class="product-grid">
-        <!-- Inserido dinamicamente via JavaScript -->
+        <!-- Cards Inseridos via JavaScript -->
       </div>
     </section>
   </main>
