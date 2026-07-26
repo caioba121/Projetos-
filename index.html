@@ -1,49 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Peças</title>
 
-    <link rel="stylesheet" href="style.css">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Auto Peças</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
 <header>
-    <h1>Auto Peças</h1>
 
-    <input
-        type="text"
-        id="pesquisa"
-        placeholder="Pesquisar peça..."
-    >
+<div class="logo">
+
+AUTO<span>PEÇAS</span>
+
+</div>
+
+<nav>
+
+<a href="#">Início</a>
+
+<a href="#">Categorias</a>
+
+<a href="#">Marcas</a>
+
+<a href="#">Contato</a>
+
+</nav>
+
 </header>
 
-<main>
+<section class="banner">
 
-    <section class="filtros">
+<h1>Encontre a peça certa para seu veículo</h1>
 
-        <select id="marca">
-            <option>Todas as marcas</option>
-        </select>
+<p>Pesquise por código, nome ou veículo.</p>
 
-        <select id="modelo">
-            <option>Todos os modelos</option>
-        </select>
+<input type="text" id="pesquisa" placeholder="Pesquisar peça...">
 
-        <select id="ano">
-            <option>Todos os anos</option>
-        </select>
+</section>
 
-    </section>
+<section class="filtros">
 
-    <section id="catalogo">
+<select id="marca">
 
-    </section>
+<option value="">Marca</option>
 
-</main>
+<option>Chevrolet</option>
+
+<option>Volkswagen</option>
+
+<option>Fiat</option>
+
+<option>Ford</option>
+
+<option>Toyota</option>
+
+</select>
+
+<select id="categoria">
+
+<option value="">Categoria</option>
+
+<option>Motor</option>
+
+<option>Freios</option>
+
+<option>Suspensão</option>
+
+<option>Elétrica</option>
+
+</select>
+
+</section>
+
+<section id="catalogo">
+
+</section>
+
+<footer>
+
+© 2026 Auto Peças
+
+</footer>
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
