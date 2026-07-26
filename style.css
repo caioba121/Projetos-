@@ -1,355 +1,338 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+// --- BASE DE DADOS COMPLETA (MOCK) ---
+const veiculosDB = {
+  volkswagen: {
+    gol: { anoInicio: 2008, anoFim: 2022 },
+    saveiro: { anoInicio: 2010, anoFim: 2024 },
+    fox: { anoInicio: 2004, anoFim: 2021 }
+  },
+  fiat: {
+    uno: { anoInicio: 2010, anoFim: 2021 },
+    palio: { anoInicio: 2008, anoFim: 2018 },
+    strada: { anoInicio: 2010, anoFim: 2024 }
+  },
+  chevrolet: {
+    onix: { anoInicio: 2013, anoFim: 2024 },
+    prisma: { anoInicio: 2013, anoFim: 2019 }
+  }
+};
+
+const produtosDB = [
+  {
+    id: 101,
+    nome: "Jogo de Velas de Ignição Green",
+    oem: "BKR6E-11",
+    preco: 120.00,
+    imagem: "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=300&auto=format&fit=crop&q=60",
+    compatibilidade: [
+      { marca: "volkswagen", modelo: "gol", anoInicio: 2008, anoFim: 2016 },
+      { marca: "volkswagen", modelo: "saveiro", anoInicio: 2010, anoFim: 2016 }
+    ]
+  },
+  {
+    id: 102,
+    nome: "Bobina de Ignição Flex 4 Pinos",
+    oem: "032905106B",
+    preco: 289.90,
+    imagem: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=300&auto=format&fit=crop&q=60",
+    compatibilidade: [
+      { marca: "volkswagen", modelo: "gol", anoInicio: 2008, anoFim: 2022 },
+      { marca: "volkswagen", modelo: "saveiro", anoInicio: 2010, anoFim: 2024 },
+      { marca: "volkswagen", modelo: "fox", anoInicio: 2008, anoFim: 2021 }
+    ]
+  },
+  {
+    id: 103,
+    nome: "Kit Pastilha de Freio Dianteira",
+    oem: "PD1042",
+    preco: 98.50,
+    imagem: "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=300&auto=format&fit=crop&q=60",
+    compatibilidade: [
+      { marca: "fiat", modelo: "palio", anoInicio: 2008, anoFim: 2018 },
+      { marca: "chevrolet", modelo: "onix", anoInicio: 2013, anoFim: 2020 }
+    ]
+  },
+  {
+    id: 104,
+    nome: "Filtro de Óleo do Motor",
+    oem: "WO120",
+    preco: 35.00,
+    imagem: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=300&auto=format&fit=crop&q=60",
+    compatibilidade: [
+      { marca: "fiat", modelo: "uno", anoInicio: 2010, anoFim: 2021 },
+      { marca: "fiat", modelo: "strada", anoInicio: 2010, anoFim: 2020 }
+    ]
+  }
+];
+
+// --- ESTADO DA APLICAÇÃO ---
+let carrinho = [];
+let filtroVeiculoAtivo = null;
+
+// --- ELEMENTOS DO DOM ---
+const selectMarca = document.getElementById('select-marca');
+const selectModelo = document.getElementById('select-modelo');
+const selectAno = document.getElementById('select-ano');
+const btnFiltrar = document.getElementById('btn-filtrar');
+const btnLimpar = document.getElementById('btn-limpar');
+const filterStatus = document.getElementById('filter-status');
+const productGrid = document.getElementById('product-grid');
+const catalogTitle = document.getElementById('catalog-title');
+const catalogCount = document.getElementById('catalog-count');
+const globalSearchInput = document.getElementById('global-search');
+
+// Drawer Carrinho Elements
+const cartDrawer = document.getElementById('cart-drawer');
+const cartOverlay = document.getElementById('cart-overlay');
+const btnCartToggle = document.getElementById('btn-cart-toggle');
+const btnCloseCart = document.getElementById('btn-close-cart');
+const cartItemsContainer = document.getElementById('cart-items');
+const cartCountBadge = document.getElementById('cart-count');
+const cartTotalValue = document.getElementById('cart-total-value');
+
+// --- INICIALIZAÇÃO ---
+document.addEventListener('DOMContentLoaded', () => {
+  carregarMarcas();
+  renderizarProdutos(produtosDB);
+  configurarEventosCarrinho();
+});
+
+// Popula Marca
+function carregarMarcas() {
+  for (let marca in veiculosDB) {
+    const option = document.createElement('option');
+    option.value = marca;
+    option.textContent = marca.toUpperCase();
+    selectMarca.appendChild(option);
+  }
 }
 
-body {
-  background-color: #f8f9fa;
-  color: #212529;
+// Evento Seleção de Marca
+selectMarca.addEventListener('change', (e) => {
+  const marca = e.target.value;
+  selectModelo.innerHTML = '<option value="">2. Selecione o Modelo</option>';
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectModelo.disabled = !marca;
+  selectAno.disabled = true;
+  btnFiltrar.disabled = true;
+
+  if (marca) {
+    for (let modelo in veiculosDB[marca]) {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo.toUpperCase();
+      selectModelo.appendChild(option);
+    }
+  }
+});
+
+// Evento Seleção de Modelo
+selectModelo.addEventListener('change', (e) => {
+  const marca = selectMarca.value;
+  const modelo = e.target.value;
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectAno.disabled = !modelo;
+  btnFiltrar.disabled = true;
+
+  if (modelo) {
+    const { anoInicio, anoFim } = veiculosDB[marca][modelo];
+    for (let ano = anoFim; ano >= anoInicio; ano--) {
+      const option = document.createElement('option');
+      option.value = ano;
+      option.textContent = ano;
+      selectAno.appendChild(option);
+    }
+  }
+});
+
+// Evento Seleção de Ano
+selectAno.addEventListener('change', (e) => {
+  btnFiltrar.disabled = !e.target.value;
+});
+
+// --- LÓGICA DE FILTRAGEM DE VEÍCULO ---
+btnFiltrar.addEventListener('click', () => {
+  const marca = selectMarca.value;
+  const modelo = selectModelo.value;
+  const ano = parseInt(selectAno.value);
+
+  filtroVeiculoAtivo = {
+    marca,
+    modelo,
+    ano,
+    textoFormatado: `${selectMarca.options[selectMarca.selectedIndex].text} ${selectModelo.options[selectModelo.selectedIndex].text} ${ano}`
+  };
+
+  aplicarFiltros();
+});
+
+btnLimpar.addEventListener('click', () => {
+  selectMarca.value = '';
+  selectModelo.innerHTML = '<option value="">2. Selecione o Modelo</option>';
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectModelo.disabled = true;
+  selectAno.disabled = true;
+  btnFiltrar.disabled = true;
+  btnLimpar.style.display = 'none';
+  filterStatus.textContent = '';
+  
+  filtroVeiculoAtivo = null;
+  globalSearchInput.value = '';
+  aplicarFiltros();
+});
+
+// Buscador Global Textual
+globalSearchInput.addEventListener('input', () => {
+  aplicarFiltros();
+});
+
+function aplicarFiltros() {
+  const termoBusca = globalSearchInput.value.toLowerCase().trim();
+
+  let resultados = produtosDB.filter(produto => {
+    // 1. Filtro de Veículo (Intervalo de Anos)
+    let passaVeiculo = true;
+    if (filtroVeiculoAtivo) {
+      passaVeiculo = produto.compatibilidade.some(c => 
+        c.marca === filtroVeiculoAtivo.marca &&
+        c.modelo === filtroVeiculoAtivo.modelo &&
+        filtroVeiculoAtivo.ano >= c.anoInicio &&
+        filtroVeiculoAtivo.ano <= c.anoFim
+      );
+    }
+
+    // 2. Filtro Textual (Nome ou OEM)
+    let passaTexto = true;
+    if (termoBusca) {
+      passaTexto = produto.nome.toLowerCase().includes(termoBusca) || 
+                 produto.oem.toLowerCase().includes(termoBusca);
+    }
+
+    return passaVeiculo && passaTexto;
+  });
+
+  if (filtroVeiculoAtivo) {
+    filterStatus.textContent = `✓ Filtro Aplicado: ${filtroVeiculoAtivo.textoFormatado}`;
+    catalogTitle.textContent = `Peças Compatíveis`;
+    btnLimpar.style.display = 'inline-block';
+  } else {
+    catalogTitle.textContent = `Todas as Peças`;
+  }
+
+  catalogCount.textContent = `${resultados.length} produto(s) encontrado(s)`;
+  renderizarProdutos(resultados);
 }
 
-/* Header Profissional */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #1a252f;
-  color: #fff;
-  padding: 15px 5%;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+// --- RENDERIZAÇÃO DE PRODUTOS ---
+function renderizarProdutos(produtos) {
+  productGrid.innerHTML = '';
+
+  if (produtos.length === 0) {
+    productGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #777;">Nenhuma peça encontrada com os critérios fornecidos.</p>';
+    return;
+  }
+
+  produtos.forEach(produto => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    let badgeHTML = '';
+    if (filtroVeiculoAtivo) {
+      badgeHTML = `<span class="badge-compatible">✓ Compatível com ${filtroVeiculoAtivo.textoFormatado}</span>`;
+    }
+
+    card.innerHTML = `
+      <div>
+        <img src="${produto.imagem}" alt="${produto.nome}">
+        ${badgeHTML}
+        <div class="oem-code">Cód. OEM: ${produto.oem}</div>
+        <h3 class="product-title">${produto.nome}</h3>
+      </div>
+      <div>
+        <div class="product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
+        <button class="btn-add-cart" data-id="${produto.id}">Adicionar ao Carrinho</button>
+      </div>
+    `;
+
+    productGrid.appendChild(card);
+  });
 }
 
-.logo {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+// --- DELEGAÇÃO DE EVENTOS (CARRINHO) ---
+productGrid.addEventListener('click', (e) => {
+  if (e.target.classList.contains('btn-add-cart')) {
+    const produtoId = parseInt(e.target.dataset.id);
+    adicionarAoCarrinho(produtoId);
+  }
+});
+
+function adicionarAoCarrinho(id) {
+  const produto = produtosDB.find(p => p.id === id);
+  const itemNoCarrinho = carrinho.find(item => item.id === id);
+
+  if (itemNoCarrinho) {
+    itemNoCarrinho.quantidade++;
+  } else {
+    carrinho.push({ ...produto, quantidade: 1 });
+  }
+
+  atualizarCarrinhoDOM();
+  abrirCarrinho();
 }
 
-.logo span {
-  color: #e74c3c;
+function alterarQuantidade(id, delta) {
+  const item = carrinho.find(item => item.id === id);
+  if (!item) return;
+
+  item.quantidade += delta;
+  if (item.quantidade <= 0) {
+    carrinho = carrinho.filter(i => i.id !== id);
+  }
+
+  atualizarCarrinhoDOM();
 }
 
-.search-bar {
-  display: flex;
-  width: 45%;
-  max-width: 600px;
+function atualizarCarrinhoDOM() {
+  cartItemsContainer.innerHTML = '';
+  let total = 0;
+  let totalItens = 0;
+
+  carrinho.forEach(item => {
+    total += item.preco * item.quantidade;
+    totalItens += item.quantidade;
+
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    cartItem.innerHTML = `
+      <div class="cart-item-info">
+        <h4>${item.nome}</h4>
+        <p>R$ ${item.preco.toFixed(2).replace('.', ',')}</p>
+      </div>
+      <div class="cart-item-controls">
+        <button onclick="alterarQuantidade(${item.id}, -1)">-</button>
+        <span>${item.quantidade}</span>
+        <button onclick="alterarQuantidade(${item.id}, 1)">+</button>
+      </div>
+    `;
+    cartItemsContainer.appendChild(cartItem);
+  });
+
+  cartCountBadge.textContent = totalItens;
+  cartTotalValue.textContent = `R$ ${total.toFixed(2).replace('.', ',')}`;
 }
 
-.search-bar input {
-  width: 100%;
-  padding: 10px 15px;
-  border: 1px solid transparent;
-  border-radius: 6px 0 0 6px;
-  outline: none;
-  font-size: 0.95rem;
+// Controladores da Gaveta (Drawer)
+function abrirCarrinho() {
+  cartDrawer.classList.add('open');
+  cartOverlay.classList.add('active');
 }
 
-.search-bar button {
-  padding: 10px 20px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 0 6px 6px 0;
-  cursor: pointer;
+function fecharCarrinho() {
+  cartDrawer.classList.remove('open');
+  cartOverlay.classList.remove('active');
 }
 
-.cart-button {
-  background-color: #2c3e50;
-  color: white;
-  border: 1px solid #34495e;
-  padding: 10px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.cart-badge {
-  background-color: #e74c3c;
-  color: white;
-  border-radius: 50%;
-  padding: 2px 8px;
-  font-size: 0.85rem;
-}
-
-/* Container */
-.container {
-  max-width: 1200px;
-  margin: 25px auto;
-  padding: 0 15px;
-}
-
-/* Seletor de Veículo */
-.vehicle-selector {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  margin-bottom: 30px;
-  border: 1px solid #e9ecef;
-}
-
-.selector-header h2 {
-  font-size: 1.3rem;
-  color: #2c3e50;
-}
-
-.selector-header p {
-  color: #6c757d;
-  font-size: 0.9rem;
-  margin-bottom: 20px;
-}
-
-.filter-group {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-select, button {
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  outline: none;
-}
-
-select:disabled {
-  background-color: #e9ecef;
-  cursor: not-allowed;
-}
-
-#btn-filtrar {
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-#btn-filtrar:hover:not(:disabled) {
-  background-color: #219150;
-}
-
-#btn-filtrar:disabled {
-  background-color: #adb5bd;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.filter-status {
-  margin-top: 15px;
-  font-weight: 600;
-  color: #27ae60;
-}
-
-/* Catálogo e Grid */
-.catalog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.catalog-count {
-  color: #6c757d;
-  font-size: 0.9rem;
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.product-card {
-  background: white;
-  border-radius: 10px;
-  padding: 16px;
-  border: 1px solid #e9ecef;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.product-card img {
-  width: 100%;
-  height: 170px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-
-.badge-compatible {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-  font-size: 0.75rem;
-  padding: 4px 8px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  font-weight: bold;
-  display: inline-block;
-}
-
-.oem-code {
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-bottom: 6px;
-}
-
-.product-title {
-  font-size: 1rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
-  line-height: 1.3;
-}
-
-.product-price {
-  font-size: 1.3rem;
-  color: #1a252f;
-  font-weight: bold;
-  margin-bottom: 12px;
-}
-
-.btn-add-cart {
-  background-color: #2980b9;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  width: 100%;
-  transition: background 0.2s;
-}
-
-.btn-add-cart:hover {
-  background-color: #1c5980;
-}
-
-/* Gaveta Lateral (Cart Drawer) */
-.cart-drawer {
-  position: fixed;
-  top: 0;
-  right: -400px;
-  width: 380px;
-  height: 100vh;
-  background-color: white;
-  box-shadow: -4px 0 15px rgba(0,0,0,0.2);
-  z-index: 1001;
-  transition: right 0.3s ease;
-  display: flex;
-  flex-direction: column;
-}
-
-.cart-drawer.open {
-  right: 0;
-}
-
-.cart-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.5);
-  z-index: 1000;
-  display: none;
-}
-
-.cart-overlay.active {
-  display: block;
-}
-
-.cart-drawer-header {
-  padding: 20px;
-  background-color: #1a252f;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.cart-items {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
-}
-
-.cart-item-info h4 {
-  font-size: 0.9rem;
-  margin-bottom: 4px;
-}
-
-.cart-item-info p {
-  font-size: 0.85rem;
-  color: #6c757d;
-}
-
-.cart-item-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.cart-item-controls button {
-  padding: 2px 8px;
-  font-size: 0.8rem;
-}
-
-.cart-drawer-footer {
-  padding: 20px;
-  border-top: 1px solid #eee;
-  background-color: #f8f9fa;
-}
-
-.cart-total {
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-}
-
-.btn-checkout {
-  width: 100%;
-  background-color: #27ae60;
-  color: white;
-  border: none;
-  padding: 12px;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
+function configurarEventosCarrinho() {
+  btnCartToggle.addEventListener('click', abrirCarrinho);
+  btnCloseCart.addEventListener('click', fecharCarrinho);
+  cartOverlay.addEventListener('click', fecharCarrinho);
 }
