@@ -112,10 +112,9 @@ function mostrarPecas(lista) {
 
             <div class="preco">${dinheiro(peca.preco)}</div>
 
-            <button onclick="detalhes('${peca.codigo}')">
-                Ver Detalhes
-            </button>
-
+            <button onclick="abrirProduto('${peca.codigo}')">
+    Ver Detalhes
+</button>
         </div>
 
         `;
@@ -199,3 +198,10 @@ Preço: ${dinheiro(peca.preco)}`
 // ================================
 
 mostrarPecas(pecas);
+
+function abrirProduto(codigo){
+
+    window.location.href =
+        `produto.html?codigo=${codigo}`;
+
+}
