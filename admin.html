@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel Administrativo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    background:#f4f4f4;
+    font-family:Poppins,sans-serif;
+}
+
+.container{
+    width:95%;
+    max-width:1300px;
+    margin:40px auto;
+}
+
+h1{
+    margin-bottom:30px;
+}
+
+.formulario{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:20px;
+
+}
+
+.formulario input,
+.formulario select,
+.formulario textarea{
+
+    width:100%;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    border:1px solid #ddd;
+
+    font-size:15px;
+
+}
+
+.formulario textarea{
+
+    resize:none;
+
+    height:120px;
+
+}
+
+.formulario button{
+
+    background:#d80000;
+
+    color:white;
+
+    border:none;
+
+    padding:15px;
+
+    font-size:16px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
+
+.formulario button:hover{
+
+    background:#b50000;
+
+}
+
+.full{
+
+    grid-column:1 / span 2;
+
+}
+
+table{
+
+    width:100%;
+
+    margin-top:40px;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+}
+
+th{
+
+    background:#1d1d1d;
+
+    color:white;
+
+}
+
+th,td{
+
+    padding:15px;
+
+    text-align:center;
+
+    border-bottom:1px solid #ddd;
+
+}
+
+.editar{
+
+    background:#2196f3;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 15px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+.excluir{
+
+    background:#d80000;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 15px;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+}
+
+img{
+
+    width:70px;
+
+    border-radius:8px;
+
+}
+
+@media(max-width:900px){
+
+.formulario{
+
+grid-template-columns:1fr;
+
+}
+
+.full{
+
+grid-column:auto;
+
+}
+
+table{
+
+display:block;
+
+overflow:auto;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+AUTO<span>PEÇAS</span>
+
+</div>
+
+<nav>
+
+<a href="index.html">Catálogo</a>
+
+<a href="admin.html">Painel</a>
+
+</nav>
+
+</header>
+
+<div class="container">
+
+<h1>Painel Administrativo</h1>
+
+<form id="formulario" class="formulario">
+
+<input
+id="codigo"
+type="text"
+placeholder="Código da peça"
+required>
+
+<input
+id="nome"
+type="text"
+placeholder="Nome da peça"
+required>
+
+<input
+id="marca"
+type="text"
+placeholder="Marca">
+
+<input
+id="modelo"
+type="text"
+placeholder="Modelo">
+
+<input
+id="ano"
+type="text"
+placeholder="Ano">
+
+<select id="categoria">
+
+<option>Motor</option>
+<option>Freios</option>
+<option>Suspensão</option>
+<option>Elétrica</option>
+<option>Ar Condicionado</option>
+<option>Carroceria</option>
+
+</select>
+
+<input
+id="preco"
+type="number"
+placeholder="Preço">
+
+<input
+id="imagem"
+type="text"
+placeholder="URL da imagem">
+
+<textarea
+id="descricao"
+class="full"
+placeholder="Descrição da peça"></textarea>
+
+<button class="full">
+
+Salvar Peça
+
+</button>
+
+</form>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Imagem</th>
+
+<th>Código</th>
+
+<th>Nome</th>
+
+<th>Marca</th>
+
+<th>Preço</th>
+
+<th>Ações</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaPecas">
+
+</tbody>
+
+</table>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+
+</html>
