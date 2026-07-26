@@ -1,0 +1,202 @@
+[
+  {
+    "codigo": "GM001",
+    "nome": "Alternador Bosch 120A",
+    "marca": "Chevrolet",
+    "modelo": "Onix",
+    "ano": "2022",
+    "categoria": "Elétrica",
+    "preco": 1250,
+    "imagem": "imagens/pecas/alternador.jpg"
+  },
+  {
+    "codigo": "GM002",
+    "nome": "Farol Direito",
+    "marca": "Chevrolet",
+    "modelo": "Onix",
+    "ano": "2022",
+    "categoria": "Elétrica",
+    "preco": 790,
+    "imagem": "imagens/pecas/farol.jpg"
+  },
+  {
+    "codigo": "VW001",
+    "nome": "Pastilha de Freio Dianteira",
+    "marca": "Volkswagen",
+    "modelo": "Gol",
+    "ano": "2021",
+    "categoria": "Freios",
+    "preco": 180,
+    "imagem": "imagens/pecas/pastilha.jpg"
+  },
+  {
+    "codigo": "VW002",
+    "nome": "Disco de Freio",
+    "marca": "Volkswagen",
+    "modelo": "Gol",
+    "ano": "2021",
+    "categoria": "Freios",
+    "preco": 340,
+    "imagem": "imagens/pecas/disco.jpg"
+  },
+  {
+    "codigo": "FI001",
+    "nome": "Amortecedor Dianteiro",
+    "marca": "Fiat",
+    "modelo": "Argo",
+    "ano": "2023",
+    "categoria": "Suspensão",
+    "preco": 420,
+    "imagem": "imagens/pecas/amortecedor.jpg"
+  },
+  {
+    "codigo": "FI002",
+    "nome": "Mola Dianteira",
+    "marca": "Fiat",
+    "modelo": "Argo",
+    "ano": "2023",
+    "categoria": "Suspensão",
+    "preco": 190,
+    "imagem": "imagens/pecas/mola.jpg"
+  },
+  {
+    "codigo": "FD001",
+    "nome": "Filtro de Óleo",
+    "marca": "Ford",
+    "modelo": "Ka",
+    "ano": "2020",
+    "categoria": "Motor",
+    "preco": 45,
+    "imagem": "imagens/pecas/filtro-oleo.jpg"
+  },
+  {
+    "codigo": "FD002",
+    "nome": "Correia Dentada",
+    "marca": "Ford",
+    "modelo": "Ka",
+    "ano": "2020",
+    "categoria": "Motor",
+    "preco": 165,
+    "imagem": "imagens/pecas/correia.jpg"
+  },
+  {
+    "codigo": "TY001",
+    "nome": "Bomba de Combustível",
+    "marca": "Toyota",
+    "modelo": "Corolla",
+    "ano": "2022",
+    "categoria": "Motor",
+    "preco": 620,
+    "imagem": "imagens/pecas/bomba.jpg"
+  },
+  {
+    "codigo": "TY002",
+    "nome": "Radiador",
+    "marca": "Toyota",
+    "modelo": "Corolla",
+    "ano": "2022",
+    "categoria": "Arrefecimento",
+    "preco": 980,
+    "imagem": "imagens/pecas/radiador.jpg"
+  },
+  {
+    "codigo": "HN001",
+    "nome": "Filtro de Ar",
+    "marca": "Honda",
+    "modelo": "Civic",
+    "ano": "2021",
+    "categoria": "Motor",
+    "preco": 70,
+    "imagem": "imagens/pecas/filtro-ar.jpg"
+  },
+  {
+    "codigo": "HN002",
+    "nome": "Velas de Ignição",
+    "marca": "Honda",
+    "modelo": "Civic",
+    "ano": "2021",
+    "categoria": "Ignição",
+    "preco": 230,
+    "imagem": "imagens/pecas/velas.jpg"
+  },
+  {
+    "codigo": "HY001",
+    "nome": "Kit Embreagem",
+    "marca": "Hyundai",
+    "modelo": "HB20",
+    "ano": "2023",
+    "categoria": "Transmissão",
+    "preco": 870,
+    "imagem": "imagens/pecas/embreagem.jpg"
+  },
+  {
+    "codigo": "HY002",
+    "nome": "Rolamento de Roda",
+    "marca": "Hyundai",
+    "modelo": "HB20",
+    "ano": "2023",
+    "categoria": "Suspensão",
+    "preco": 240,
+    "imagem": "imagens/pecas/rolamento.jpg"
+  },
+  {
+    "codigo": "RN001",
+    "nome": "Lanterna Traseira",
+    "marca": "Renault",
+    "modelo": "Kwid",
+    "ano": "2022",
+    "categoria": "Iluminação",
+    "preco": 350,
+    "imagem": "imagens/pecas/lanterna.jpg"
+  },
+  {
+    "codigo": "RN002",
+    "nome": "Retrovisor Esquerdo",
+    "marca": "Renault",
+    "modelo": "Kwid",
+    "ano": "2022",
+    "categoria": "Carroceria",
+    "preco": 460,
+    "imagem": "imagens/pecas/retrovisor.jpg"
+  },
+  {
+    "codigo": "JP001",
+    "nome": "Bateria 60Ah",
+    "marca": "Jeep",
+    "modelo": "Renegade",
+    "ano": "2023",
+    "categoria": "Elétrica",
+    "preco": 690,
+    "imagem": "imagens/pecas/bateria.jpg"
+  },
+  {
+    "codigo": "JP002",
+    "nome": "Motor de Partida",
+    "marca": "Jeep",
+    "modelo": "Renegade",
+    "ano": "2023",
+    "categoria": "Elétrica",
+    "preco": 980,
+    "imagem": "imagens/pecas/motor-partida.jpg"
+  },
+  {
+    "codigo": "NS001",
+    "nome": "Compressor do Ar Condicionado",
+    "marca": "Nissan",
+    "modelo": "Versa",
+    "ano": "2021",
+    "categoria": "Ar Condicionado",
+    "preco": 1480,
+    "imagem": "imagens/pecas/compressor.jpg"
+  },
+  {
+    "codigo": "NS002",
+    "nome": "Condensador",
+    "marca": "Nissan",
+    "modelo": "Versa",
+    "ano": "2021",
+    "categoria": "Ar Condicionado",
+    "preco": 780,
+    "imagem": "imagens/pecas/condensador.jpg"
+  }
+]
