@@ -17,7 +17,7 @@
     "ano": "2022",
     "categoria": "Elétrica",
     "preco": 790,
-    "imagem": "imagens/pecas/farol.jpg"
+    "imagem": "imagens/pecas/farol.png"
   },
   {
     "codigo": "VW001",
@@ -27,7 +27,7 @@
     "ano": "2021",
     "categoria": "Freios",
     "preco": 180,
-    "imagem": "imagens/pecas/pastilha.jpg"
+    "imagem": "imagens/pecas/pastilha.png"
   },
   {
     "codigo": "VW002",
@@ -37,7 +37,7 @@
     "ano": "2021",
     "categoria": "Freios",
     "preco": 340,
-    "imagem": "imagens/pecas/disco.jpg"
+    "imagem": "imagens/pecas/disco.png"
   },
   {
     "codigo": "FI001",
@@ -47,7 +47,7 @@
     "ano": "2023",
     "categoria": "Suspensão",
     "preco": 420,
-    "imagem": "imagens/pecas/amortecedor.jpg"
+    "imagem": "imagens/pecas/amortecedor.png"
   },
   {
     "codigo": "FI002",
@@ -57,7 +57,7 @@
     "ano": "2023",
     "categoria": "Suspensão",
     "preco": 190,
-    "imagem": "imagens/pecas/mola.jpg"
+    "imagem": "imagens/pecas/mola.png"
   },
   {
     "codigo": "FD001",
@@ -67,7 +67,7 @@
     "ano": "2020",
     "categoria": "Motor",
     "preco": 45,
-    "imagem": "imagens/pecas/filtro-oleo.jpg"
+    "imagem": "imagens/pecas/filtro-oleo.png"
   },
   {
     "codigo": "FD002",
@@ -77,7 +77,7 @@
     "ano": "2020",
     "categoria": "Motor",
     "preco": 165,
-    "imagem": "imagens/pecas/correia.jpg"
+    "imagem": "imagens/pecas/correia.png"
   },
   {
     "codigo": "TY001",
@@ -87,7 +87,7 @@
     "ano": "2022",
     "categoria": "Motor",
     "preco": 620,
-    "imagem": "imagens/pecas/bomba.jpg"
+    "imagem": "imagens/pecas/bomba.png"
   },
   {
     "codigo": "TY002",
