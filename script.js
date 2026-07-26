@@ -2,8 +2,8 @@
 // BANCO DE DADOS DAS PEÇAS
 // ================================
 
-const pecas = [
-    {
+let pecas = [];
+
         codigo: "GM001",
         nome: "Alternador Bosch 120A",
         marca: "Chevrolet",
@@ -197,9 +197,32 @@ Preço: ${dinheiro(peca.preco)}`
 // INICIAR
 // ================================
 
-mostrarPecas(pecas);
+carregarPecas();
 
 function abrirProduto(codigo){
+
+-----------// Carregar fotos ------------
+    async function carregarPecas() {
+
+    try {
+
+        const resposta = await fetch("dados/pecas.json");
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao carregar o catálogo.");
+        }
+
+        pecas = await resposta.json();
+
+        mostrarPecas(pecas);
+
+    } catch (erro) {
+
+        console.error(erro);
+
+    }
+
+}
 
     window.location.href =
         `produto.html?codigo=${codigo}`;
