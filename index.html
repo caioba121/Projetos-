@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPeças Pro - Peças e Acessórios Automotivos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="logo">AutoPeças <span>Pro</span></div>
+    <div class="search-bar">
+      <input type="text" id="global-search" placeholder="Busque por nome da peça ou código OEM...">
+      <button id="btn-global-search">Buscar</button>
+    </div>
+    <div class="cart-status">
+      🛒 Carrinho (<span id="cart-count">0</span>)
+    </div>
+  </header>
+
+  <!-- Seção Principal com Filtro de Veículo -->
+  <main class="container">
+    <section class="vehicle-selector">
+      <h2>🚗 Encontre a peça exata para o seu carro</h2>
+      <p>Selecione seu veículo para evitar incompatibilidades:</p>
+
+      <div class="filter-group">
+        <select id="select-marca">
+          <option value="">1. Selecione a Marca</option>
+        </select>
+
+        <select id="select-modelo" disabled>
+          <option value="">2. Selecione o Modelo</option>
+        </select>
+
+        <select id="select-ano" disabled>
+          <option value="">3. Selecione o Ano</option>
+        </select>
+
+        <button id="btn-filtrar" disabled>Filtrar Peças</button>
+        <button id="btn-limpar" class="btn-secondary" style="display: none;">Limpar Filtro</button>
+      </div>
+      
+      <div id="filter-status" class="filter-status"></div>
+    </section>
+
+    <!-- Catálogo de Produtos -->
+    <section class="catalog">
+      <h2 id="catalog-title">Todas as Peças</h2>
+      <div id="product-grid" class="product-grid">
+        <!-- Inserido dinamicamente via JavaScript -->
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
