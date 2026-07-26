@@ -9,7 +9,7 @@ const pecas = [
         marca: "Chevrolet",
         categoria: "Elétrica",
         preco: 1250,
-        imagem: "https://picsum.photos/400/250?random=1"
+        imagem: "imagens/pecas/alternador.png"
     },
 
     {
