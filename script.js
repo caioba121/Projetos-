@@ -1,275 +1,195 @@
-// ================================================
-// CATÁLOGO DE PEÇAS AUTOMOTIVAS - SCRIPT PRINCIPAL
-// ================================================
+// --- BASE DE DADOS (Simulação) ---
+const veiculosDB = {
+  volkswagen: {
+    gol: [2010, 2011, 2012, 2013, 2014, 2015],
+    saveiro: [2011, 2012, 2013, 2014, 2015, 2016]
+  },
+  fiat: {
+    uno: [2010, 2011, 2012, 2013],
+    palio: [2012, 2013, 2014, 2015]
+  },
+  chevrolet: {
+    onix: [2013, 2014, 2015, 2016, 2017, 2018]
+  }
+};
 
-/**
- * Estado global da aplicação
- */
-let pecas = [];
+const produtosDB = [
+  {
+    id: 1,
+    nome: "Jogo de Velas de Ignição",
+    oem: "BKR6E-11",
+    preco: 120.00,
+    imagem: "https://via.placeholder.com/200?text=Velas+de+Ignicao",
+    compatibilidade: [
+      { marca: "volkswagen", modelo: "gol", anos: [2010, 2011, 2012, 2013] },
+      { marca: "volkswagen", modelo: "saveiro", anos: [2011, 2012, 2013] }
+    ]
+  },
+  {
+    id: 2,
+    nome: "Bobina de Ignição 4 Pinos",
+    oem: "032905106B",
+    preco: 280.50,
+    imagem: "https://via.placeholder.com/200?text=Bobina+Ignicao",
+    compatibilidade: [
+      { marca: "volkswagen", modelo: "gol", anos: [2010, 2011, 2012, 2013, 2014, 2015] },
+      { marca: "volkswagen", modelo: "saveiro", anos: [2011, 2012, 2013, 2014, 2015, 2016] }
+    ]
+  },
+  {
+    id: 3,
+    nome: "Kit Pastilha de Freio Dianteira",
+    oem: "PD1042",
+    preco: 95.00,
+    imagem: "https://via.placeholder.com/200?text=Pastilha+Freio",
+    compatibilidade: [
+      { marca: "fiat", modelo: "palio", anos: [2012, 2013, 2014] },
+      { marca: "chevrolet", modelo: "onix", anos: [2013, 2014, 2015] }
+    ]
+  }
+];
 
-// ================================================
-// REFERÊNCIAS DO DOM
-// ================================================
-const catalogo = document.getElementById("catalogo");
-const pesquisa = document.getElementById("pesquisa");
-const marca = document.getElementById("marca");
-const categoria = document.getElementById("categoria");
-const totalProdutos = document.getElementById("total-produtos");
-const btnLimparFiltros = document.getElementById("limpar-filtros");
+let carrinhoCount = 0;
 
-// ================================================
-// UTILITÁRIOS E FORMATAÇÃO
-// ================================================
+// --- ELEMENTOS DO DOM ---
+const selectMarca = document.getElementById('select-marca');
+const selectModelo = document.getElementById('select-modelo');
+const selectAno = document.getElementById('select-ano');
+const btnFiltrar = document.getElementById('btn-filtrar');
+const btnLimpar = document.getElementById('btn-limpar');
+const filterStatus = document.getElementById('filter-status');
+const productGrid = document.getElementById('product-grid');
+const catalogTitle = document.getElementById('catalog-title');
+const cartCount = document.getElementById('cart-count');
 
-/**
- * Formata valores numéricos para a moeda Real (BRL)
- * @param {number} valor 
- * @returns {string} Valor formatado em R$
- */
-function dinheiro(valor) {
-    const numero = Number(valor) || 0;
-    return numero.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-    });
-}
-
-/**
- * Normaliza textos removendo espaços extras e convertendo para minúsculas
- * @param {string} texto 
- * @returns {string}
- */
-function normalizarTexto(texto) {
-    return (texto || "").toString().trim().toLowerCase();
-}
-
-/**
- * Garante um fallback visual caso a imagem falhe ao carregar
- * @param {HTMLImageElement} imgElement 
- */
-function tratarErroImagem(imgElement) {
-    imgElement.onerror = null;
-    imgElement.src = "https://via.placeholder.com/400x250?text=Imagem+Indispon%C3%ADvel";
-}
-
-// ================================================
-// CARREGAMENTO DE DADOS (JSON + ADMIN / LOCALSTORAGE)
-// ================================================
-
-/**
- * Sincroniza e carrega as peças a partir de fonte remota (JSON) ou local (LocalStorage)
- */
-async function carregarPecas() {
-    try {
-        // 1. Verifica se existem peças cadastradas via Painel Admin (LocalStorage)
-        const pecasSalvas = localStorage.getItem("banco_pecas");
-
-        if (pecasSalvas) {
-            pecas = JSON.parse(pecasSalvas);
-        } else {
-            // 2. Se não houver dados locais, busca do arquivo pecas.json
-            const resposta = await fetch("dados/pecas.json");
-
-            if (!resposta.ok) {
-                throw new Error(`Falha na requisição: ${resposta.status}`);
-            }
-
-            pecas = await resposta.json();
-            
-            // Salva no LocalStorage para sincronia com o painel Admin
-            localStorage.setItem("banco_pecas", JSON.stringify(pecas));
-        }
-
-        // Popula os seletores de filtros dinamicamente e renderiza a tela
-        preencherOpcoesFiltros(pecas);
-        mostrarPecas(pecas);
-
-    } catch (erro) {
-        console.error("Erro ao carregar o catálogo de peças:", erro);
-        exibirMensagemErro("Não foi possível carregar as peças. Tente novamente mais tarde.");
-    }
-}
-
-// ================================================
-// RENDERIZAÇÃO DA INTERFACE
-// ================================================
-
-/**
- * Exibe o grid de cartões de produtos na tela
- * @param {Array} listaDePecas 
- */
-function mostrarPecas(listaDePecas) {
-    if (!catalogo) return;
-
-    catalogo.innerHTML = "";
-
-    // Atualiza contador se o elemento existir no HTML
-    if (totalProdutos) {
-        totalProdutos.textContent = `${listaDePecas.length} peça(s) encontrada(s)`;
-    }
-
-    if (listaDePecas.length === 0) {
-        catalogo.innerHTML = `
-            <div class="sem-resultados">
-                <h2>Nenhuma peça encontrada.</h2>
-                <p>Tente ajustar os termos da pesquisa ou limpar os filtros selecionados.</p>
-            </div>
-        `;
-        return;
-    }
-
-    listaDePecas.forEach(peca => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const caminhoImagem = peca.imagem || "https://via.placeholder.com/400x250?text=Sem+Foto";
-
-        card.innerHTML = `
-            <div class="card-imagem">
-                <img src="${caminhoImagem}" alt="${peca.nome}" onerror="tratarErroImagem(this)">
-            </div>
-            <div class="card-conteudo">
-                <span class="card-categoria">${peca.categoria || 'Geral'}</span>
-                <h2>${peca.nome}</h2>
-                <p class="card-info"><strong>Código:</strong> ${peca.codigo}</p>
-                <p class="card-info"><strong>Marca:</strong> ${peca.marca}</p>
-                <div class="preco">${dinheiro(peca.preco)}</div>
-                <button class="btn-detalhes" onclick="abrirProduto('${peca.codigo}')">
-                    Ver Detalhes
-                </button>
-            </div>
-        `;
-
-        catalogo.appendChild(card);
-    });
-}
-
-/**
- * Exibe mensagem de erro estilizada no catálogo
- * @param {string} mensagem 
- */
-function exibirMensagemErro(mensagem) {
-    if (!catalogo) return;
-    catalogo.innerHTML = `
-        <div class="card-erro">
-            <h2>Ops! Algo deu errado.</h2>
-            <p>${mensagem}</p>
-        </div>
-    `;
-}
-
-// ================================================
-// FILTROS E PESQUISA AUTOMÁTICA
-// ================================================
-
-/**
- * Aplica os filtros combinados de busca por texto, marca e categoria
- */
-function filtrar() {
-    const termoBusca = normalizarTexto(pesquisa ? pesquisa.value : "");
-    const marcaSelecionada = marca ? marca.value : "";
-    const categoriaSelecionada = categoria ? categoria.value : "";
-
-    const resultado = pecas.filter(peca => {
-        const nomeMatch = normalizarTexto(peca.nome).includes(termoBusca);
-        const codigoMatch = normalizarTexto(peca.codigo).includes(termoBusca);
-        const encontrouTexto = nomeMatch || codigoMatch;
-
-        const encontrouMarca = marcaSelecionada === "" || peca.marca === marcaSelecionada;
-        const encontrouCategoria = categoriaSelecionada === "" || peca.categoria === categoriaSelecionada;
-
-        return encontrouTexto && encontrouMarca && encontrouCategoria;
-    });
-
-    mostrarPecas(resultado);
-}
-
-/**
- * Preenche dinamicamente os selects de Filtro com base nos dados reais
- * @param {Array} listaDePecas 
- */
-function preencherOpcoesFiltros(listaDePecas) {
-    if (!marca || !categoria) return;
-
-    const marcasUnicas = [...new Set(listaDePecas.map(p => p.marca))].sort();
-    const categoriasUnicas = [...new Set(listaDePecas.map(p => p.categoria))].sort();
-
-    // Mantém a opção padrão "Todas" e adiciona as encontradas
-    marca.innerHTML = '<option value="">Todas as Marcas</option>';
-    marcasUnicas.forEach(m => {
-        if (m) marca.innerHTML += `<option value="${m}">${m}</option>`;
-    });
-
-    categoria.innerHTML = '<option value="">Todas as Categorias</option>';
-    categoriasUnicas.forEach(c => {
-        if (c) categoria.innerHTML += `<option value="${c}">${c}</option>`;
-    });
-}
-
-/**
- * Reseta todos os campos de filtro para o estado inicial
- */
-function limparFiltros() {
-    if (pesquisa) pesquisa.value = "";
-    if (marca) marca.value = "";
-    if (categoria) categoria.value = "";
-    mostrarPecas(pecas);
-}
-
-// ================================================
-// NAVEGAÇÃO E DETALHES DO PRODUTO
-// ================================================
-
-/**
- * Redireciona para a página individual do produto passando o código via URL
- * @param {string} codigo 
- */
-function abrirProduto(codigo) {
-    if (!codigo) return;
-    window.location.href = `produto.html?codigo=${encodeURIComponent(codigo)}`;
-}
-
-/**
- * Exibe um alerta rápido com detalhes da peça (função utilitária de suporte)
- * @param {string} codigo 
- */
-function detalhes(codigo) {
-    const peca = pecas.find(p => p.codigo === codigo);
-
-    if (!peca) {
-        alert("Peça não encontrada!");
-        return;
-    }
-
-    alert(
-        `Peça: ${peca.nome}\n` +
-        `Código: ${peca.codigo}\n` +
-        `Marca: ${peca.marca}\n` +
-        `Categoria: ${peca.categoria}\n` +
-        `Preço: ${dinheiro(peca.preco)}`
-    );
-}
-
-// ================================================
-// REGISTRO DE EVENTOS E INICIALIZAÇÃO
-// ================================================
-
-function inicializarEventos() {
-    if (pesquisa) pesquisa.addEventListener("input", filtrar);
-    if (marca) marca.addEventListener("change", filtrar);
-    if (categoria) categoria.addEventListener("change", filtrar);
-    if (btnLimparFiltros) btnLimparFiltros.addEventListener("click", limparFiltros);
-
-    // Escuta atualizações feitas pelo admin.html em outras abas
-    window.addEventListener("storage", (evento) => {
-        if (evento.key === "banco_pecas") {
-            carregarPecas();
-        }
-    });
-}
-
-// Dispara o carregamento assim que o DOM estiver pronto
-document.addEventListener("DOMContentLoaded", () => {
-    inicializarEventos();
-    carregarPecas();
+// --- INICIALIZAÇÃO ---
+document.addEventListener('DOMContentLoaded', () => {
+  carregarMarcas();
+  renderizarProdutos(produtosDB);
 });
+
+// Popula o select de marcas
+function carregarMarcas() {
+  for (let marca in veiculosDB) {
+    const option = document.createElement('option');
+    option.value = marca;
+    option.textContent = marca.toUpperCase();
+    selectMarca.appendChild(option);
+  }
+}
+
+// Evento ao mudar a marca
+selectMarca.addEventListener('change', (e) => {
+  const marca = e.target.value;
+  selectModelo.innerHTML = '<option value="">2. Selecione o Modelo</option>';
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectModelo.disabled = !marca;
+  selectAno.disabled = true;
+  btnFiltrar.disabled = true;
+
+  if (marca) {
+    for (let modelo in veiculosDB[marca]) {
+      const option = document.createElement('option');
+      option.value = modelo;
+      option.textContent = modelo.toUpperCase();
+      selectModelo.appendChild(option);
+    }
+  }
+});
+
+// Evento ao mudar o modelo
+selectModelo.addEventListener('change', (e) => {
+  const marca = selectMarca.value;
+  const modelo = e.target.value;
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectAno.disabled = !modelo;
+  btnFiltrar.disabled = true;
+
+  if (modelo) {
+    const anos = veiculosDB[marca][modelo];
+    anos.forEach(ano => {
+      const option = document.createElement('option');
+      option.value = ano;
+      option.textContent = ano;
+      selectAno.appendChild(option);
+    });
+  }
+});
+
+// Evento ao mudar o ano
+selectAno.addEventListener('change', (e) => {
+  btnFiltrar.disabled = !e.target.value;
+});
+
+// --- LÓGICA DE FILTRAGEM ---
+btnFiltrar.addEventListener('click', () => {
+  const marca = selectMarca.value;
+  const modelo = selectModelo.value;
+  const ano = parseInt(selectAno.value);
+
+  const produtosFiltrADOS = produtosDB.filter(produto => {
+    return produto.compatibilidade.some(c => 
+      c.marca === marca && 
+      c.modelo === modelo && 
+      c.anos.includes(ano)
+    );
+  });
+
+  const textoVeiculo = `${selectMarca.options[selectMarca.selectedIndex].text} ${selectModelo.options[selectModelo.selectedIndex].text} ${ano}`;
+  
+  filterStatus.textContent = `Mostrando peças compatíveis com: ${textoVeiculo}`;
+  catalogTitle.textContent = `Peças Compatíveis`;
+  btnLimpar.style.display = 'inline-block';
+
+  renderizarProdutos(produtosFiltrADOS, textoVeiculo);
+});
+
+btnLimpar.addEventListener('click', () => {
+  selectMarca.value = '';
+  selectModelo.innerHTML = '<option value="">2. Selecione o Modelo</option>';
+  selectAno.innerHTML = '<option value="">3. Selecione o Ano</option>';
+  selectModelo.disabled = true;
+  selectAno.disabled = true;
+  btnFiltrar.disabled = true;
+  btnLimpar.style.display = 'none';
+  filterStatus.textContent = '';
+  catalogTitle.textContent = 'Todas as Peças';
+
+  renderizarProdutos(produtosDB);
+});
+
+// --- RENDERIZAÇÃO NA TELA ---
+function renderizarProdutos(produtos, veiculoFiltrado = null) {
+  productGrid.innerHTML = '';
+
+  if (produtos.length === 0) {
+    productGrid.innerHTML = '<p>Nenhuma peça encontrada para o veículo selecionado.</p>';
+    return;
+  }
+
+  produtos.forEach(produto => {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+
+    let badgeHTML = '';
+    if (veiculoFiltrado) {
+      badgeHTML = `<span class="badge-compatible">✓ Compatível com ${veiculoFiltrado}</span>`;
+    }
+
+    card.innerHTML = `
+      <img src="${produto.imagem}" alt="${produto.nome}">
+      ${badgeHTML}
+      <div class="oem-code">Cód. OEM: ${produto.oem}</div>
+      <h3 class="product-title">${produto.nome}</h3>
+      <div class="product-price">R$ ${produto.preco.toFixed(2).replace('.', ',')}</div>
+      <button class="btn-add-cart" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+    `;
+
+    productGrid.appendChild(card);
+  });
+}
+
+function adicionarAoCarrinho() {
+  carrinhoCount++;
+  cartCount.textContent = carrinhoCount;
+}
